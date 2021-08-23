@@ -9,8 +9,11 @@ class SessionStorage implements CredentialStorage
 {
 	public function isLoggedIn(): bool
 	{
-		// TODO: if (isset($_SESSION[])).
-		return true;
+		if (isset($_SESSION['privacy-firewall']) === true) {
+			return true;
+		}
+
+		return false;
 	}
 
 
@@ -25,12 +28,13 @@ class SessionStorage implements CredentialStorage
 		if (isset($_SESSION['privacy-firewall']) === false) {
 			//$_SESSION['privacy-firewall']
 		}
-		// TODO: set session.
 	}
 
 
 	public function logout(): void
 	{
-		// TODO: unset($_SESSION[]);.
+		if (isset($_SESSION['privacy-firewall']) === true) {
+			unset($_SESSION['privacy-firewall']);
+		}
 	}
 }

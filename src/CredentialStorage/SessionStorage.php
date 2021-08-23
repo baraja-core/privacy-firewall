@@ -1,14 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Baraja\PrivacyFirewall;
 
 
 class SessionStorage implements CredentialStorage
 {
-
 	public function isLoggedIn(): bool
 	{
-		// TODO: Implement isLoggedIn() method - check session.
+		// TODO: if (isset($_SESSION[])).
 		return true;
 	}
 
@@ -16,18 +17,20 @@ class SessionStorage implements CredentialStorage
 	public function setIdentity(?string $expiration = null): void
 	{
 		session_start();
-		if ($expiration !== null)
-		{
+		if ($expiration !== null) {
 			ini_set('session.gc_maxlifetime', $expiration);
 			session_set_cookie_params($expiration);
 		}
 
-		// TODO: Implement setIdentity() method - set session.
+		if (isset($_SESSION['privacy-firewall']) === false) {
+			//$_SESSION['privacy-firewall']
+		}
+		// TODO: set session.
 	}
 
 
 	public function logout(): void
 	{
-		// TODO: Implement logout() method - unset($_SESSION[]);.
+		// TODO: unset($_SESSION[]);.
 	}
 }

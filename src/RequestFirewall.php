@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Baraja\PrivacyFirewall;
 
 
@@ -16,10 +18,10 @@ class RequestFirewall
 		?RequestFirewallAuthorization $authorization = null,
 	) {
 		if ($storage === null) {
-			$storage = new SessionStorage();
+			$storage = new SessionStorage;
 		}
 		if ($authorization === null) {
-			$authorization = new DefaultAuthorization();
+			$authorization = new DefaultAuthorization;
 		}
 
 		$this->storage = $storage;
@@ -37,7 +39,7 @@ class RequestFirewall
 		if ($credential !== null) {
 			if ($this->authorization->auth($credential)) {
 				$this->storage->setIdentity();
-				header('Location: '.$_SERVER['PHP_SELF']);
+				header('Location: ' . $_SERVER['PHP_SELF']);
 				die;
 			}
 		}

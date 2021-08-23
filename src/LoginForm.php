@@ -1,6 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Baraja\PrivacyFirewall;
+
 
 class LoginForm
 {
@@ -12,12 +15,9 @@ class LoginForm
 
 	public function getCredential(): ?string
 	{
-		if (isset($_POST['submit']))
-		{
+		if (isset($_POST['submit'])) {
 			return $_POST['password'];
-		}
-		else
-		{
+		} else {
 			return null;
 		}
 	}

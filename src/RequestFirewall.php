@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Baraja\PrivacyFirewall;
 
 
-class RequestFirewall
+use Baraja\Url\Url;
+
+final class RequestFirewall
 {
 	private CredentialStorage $storage;
 
@@ -17,15 +19,8 @@ class RequestFirewall
 		?CredentialStorage $storage = null,
 		?RequestFirewallAuthorization $authorization = null,
 	) {
-		if ($storage === null) {
-			$storage = new SessionStorage;
-		}
-		if ($authorization === null) {
-			$authorization = new DefaultAuthorization;
-		}
-
-		$this->storage = $storage;
-		$this->authorization = $authorization;
+		$this->storage = $storage ?? new SessionStorage;
+		$this->authorization = $authorization ?? new DefaultAuthorization;
 	}
 
 
@@ -36,12 +31,10 @@ class RequestFirewall
 		}
 
 		$credential = $this->loginForm->getCredential();
-		if ($credential !== null) {
-			if ($this->authorization->auth($credential)) {
-				$this->storage->setIdentity();
-				header('Location: ' . $_SERVER['PHP_SELF']);
-				die;
-			}
+		if ($credential !== null && $this->authorization->auth($credential)) {
+			$this->storage->setIdentity();
+			header('Location: ' . Url::get()->getCurrentUrl());
+			die;
 		}
 
 		$this->loginForm->render();

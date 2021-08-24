@@ -9,7 +9,8 @@
 		}
 	],
 	"require": {
-		"php": "^8.0"
+		"php": "^8.0",
+		"baraja-core/url": "^1.1"
 	},
 	"require-dev": {
 		"tracy/tracy": "^2.8",

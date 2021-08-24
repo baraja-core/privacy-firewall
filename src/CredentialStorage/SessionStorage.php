@@ -5,36 +5,55 @@ declare(strict_types=1);
 namespace Baraja\PrivacyFirewall;
 
 
-class SessionStorage implements CredentialStorage
+final class SessionStorage implements CredentialStorage
 {
+	public const SESSION_KEY = '__brj-privacy-firewall';
+
+
 	public function isLoggedIn(): bool
 	{
-		if (isset($_SESSION['privacy-firewall']) === true) {
-			return true;
-		}
-
-		return false;
+		return ($_SESSION[self::SESSION_KEY] ?? null) <= time();
 	}
 
 
 	public function setIdentity(?string $expiration = null): void
 	{
-		session_start();
-		if ($expiration !== null) {
-			ini_set('session.gc_maxlifetime', $expiration);
-			session_set_cookie_params($expiration);
-		}
+		$this->setupSession();
+		$time = $expiration !== null
+			? strtotime('now + ' . $expiration)
+			: strtotime('now + 14 days');
 
-		if (isset($_SESSION['privacy-firewall']) === false) {
-			//$_SESSION['privacy-firewall']
-		}
+		$_SESSION[self::SESSION_KEY] = (int) $time;
 	}
 
 
 	public function logout(): void
 	{
-		if (isset($_SESSION['privacy-firewall']) === true) {
-			unset($_SESSION['privacy-firewall']);
+		$this->setupSession();
+		if (isset($_SESSION[self::SESSION_KEY]) === true) {
+			unset($_SESSION[self::SESSION_KEY]);
+		}
+	}
+
+
+	private function setupSession(): void
+	{
+		if (PHP_SAPI === 'cli') {
+			return;
+		}
+		if (headers_sent($file, $line) || ob_get_length()) {
+			throw new \LogicException(
+				__CLASS__ . ': Firewall has been called after some output has been sent.'
+				. ($file ? ' Output started at ' . $file . ':' . $line . '.' : '')
+			);
+		}
+		if (session_status() !== PHP_SESSION_ACTIVE) {
+			ini_set('session.use_cookies', '1');
+			ini_set('session.use_only_cookies', '1');
+			ini_set('session.use_trans_sid', '0');
+			ini_set('session.cookie_path', '/');
+			ini_set('session.cookie_httponly', '1');
+			session_start();
 		}
 	}
 }

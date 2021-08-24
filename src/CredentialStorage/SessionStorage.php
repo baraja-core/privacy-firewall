@@ -43,9 +43,9 @@ final class SessionStorage implements CredentialStorage
 		if (PHP_SAPI === 'cli') {
 			return;
 		}
-		if (headers_sent($file, $line) || ob_get_length()) {
+		if (headers_sent($file, $line) || ((int) ob_get_length()) > 0) {
 			throw new \LogicException(
-				__CLASS__ . ': Firewall has been called after some output has been sent.'
+				self::class . ': Firewall has been called after some output has been sent.'
 				. ($file ? ' Output started at ' . $file . ':' . $line . '.' : '')
 			);
 		}

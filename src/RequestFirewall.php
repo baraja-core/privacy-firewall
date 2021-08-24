@@ -5,38 +5,46 @@ declare(strict_types=1);
 namespace Baraja\PrivacyFirewall;
 
 
+use Baraja\Lock\Lock;
 use Baraja\Url\Url;
 
 final class RequestFirewall
 {
+	private LoginForm $loginForm;
+
 	private CredentialStorage $storage;
 
-	private RequestFirewallAuthorization $authorization;
+	private RequestFirewallAuthorizator $authorization;
 
 
 	public function __construct(
-		private LoginForm $loginForm,
 		?CredentialStorage $storage = null,
-		?RequestFirewallAuthorization $authorization = null,
+		?RequestFirewallAuthorizator $authorizator = null,
 	) {
+		$this->loginForm = new LoginForm;
 		$this->storage = $storage ?? new SessionStorage;
-		$this->authorization = $authorization ?? new DefaultAuthorization;
+		$this->authorization = $authorizator ?? new DefaultSimpleAuthorizator;
 	}
 
 
 	public function run(): void
 	{
+		$this->storage->logout();
 		if ($this->storage->isLoggedIn()) {
 			return;
 		}
 
 		$credential = $this->loginForm->getCredential();
+		if ($credential !== null) {
+			Lock::wait('request-firewall-auth');
+			Lock::startTransaction('request-firewall-auth');
+		}
 		if ($credential !== null && $this->authorization->auth($credential)) {
 			$this->storage->setIdentity();
 			header('Location: ' . Url::get()->getCurrentUrl());
-			die;
+		} else {
+			$this->loginForm->render();
 		}
-
-		$this->loginForm->render();
+		die;
 	}
 }

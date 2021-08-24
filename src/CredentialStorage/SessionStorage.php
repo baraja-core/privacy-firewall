@@ -12,7 +12,9 @@ final class SessionStorage implements CredentialStorage
 
 	public function isLoggedIn(): bool
 	{
-		return ($_SESSION[self::SESSION_KEY] ?? null) <= time();
+		$time = $_SESSION[self::SESSION_KEY] ?? null;
+
+		return $time !== null && $time >= time();
 	}
 
 

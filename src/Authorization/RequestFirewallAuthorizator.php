@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Baraja\PrivacyFirewall;
 
 
-interface RequestFirewallAuthorization
+interface RequestFirewallAuthorizator
 {
 	public function auth(string $credential): bool;
 }

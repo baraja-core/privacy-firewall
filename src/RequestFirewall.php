@@ -29,7 +29,6 @@ final class RequestFirewall
 
 	public function run(): void
 	{
-		$this->storage->logout();
 		if ($this->storage->isLoggedIn()) {
 			return;
 		}

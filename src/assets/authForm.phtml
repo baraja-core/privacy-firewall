@@ -1,0 +1,102 @@
+<?php
+
+declare(strict_types=1);
+
+
+use Baraja\PrivacyFirewall\LoginForm;
+use Baraja\Url\Url;
+
+?>
+<div class="container">
+	<div class="card">
+		<div class="alert">
+			Access to this website is protected. Enter your project password.
+		</div>
+		<form method="post" action="<?= LoginForm::escapeHtmlAttr(Url::get()->getCurrentUrl()) ?>">
+			<div>
+				<label for="password">Password:</label>
+				<input type="password" name="password" id="password">
+			</div>
+			<div style="margin-top:1em">
+				<button type="submit">Login</button>
+			</div>
+		</form>
+	</div>
+</div>
+<style>
+	* {
+		font-family: Arial;
+	}
+
+	:focus {
+		outline: none;
+	}
+
+	body {
+		background: #f3f2ee;
+	}
+
+	.container {
+		margin: 8em auto;
+		max-width: 25em;
+	}
+
+	.card {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		background-color: #fff;
+		background-clip: border-box;
+		border: 1px solid rgba(0, 0, 0, .125);
+		border-radius: .25rem;
+		padding: 1em;
+		padding-bottom: 0;
+	}
+
+	.alert {
+		padding: .75rem 1.25rem;
+		margin-bottom: 1rem;
+		border-radius: .25rem;
+		border: 1px solid #ffeeba;
+		color: #856404;
+		background-color: #fff3cd;
+		line-height: 1.5;
+	}
+
+	input {
+		width: 100%;
+		height: calc(1.5em + .75rem + 2px);
+		padding: .375rem .75rem;
+		font-size: 1rem;
+		font-weight: 400;
+		line-height: 1.5;
+		color: #495057;
+		background-color: #fff;
+		background-clip: padding-box;
+		border: 1px solid #ced4da;
+		border-radius: .25rem;
+		transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+		margin-top: .25em;
+	}
+
+	button {
+		font-weight: 400;
+		text-align: center;
+		vertical-align: middle;
+		-webkit-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		user-select: none;
+		padding: .375rem .75rem;
+		font-size: 1rem;
+		line-height: 1.5;
+		border: 2px solid #007bff;
+		border-radius: .25rem;
+		color: #fff;
+		background-color: #007bff;
+	}
+
+	button:hover, button:active, button:focus {
+		background-color: #2e93ff;
+	}
+</style>

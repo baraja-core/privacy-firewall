@@ -46,7 +46,7 @@ final class SessionStorage implements CredentialStorage
 		if (headers_sent($file, $line) || ((int) ob_get_length()) > 0) {
 			throw new \LogicException(
 				self::class . ': Firewall has been called after some output has been sent.'
-				. ($file ? ' Output started at ' . $file . ':' . $line . '.' : '')
+				. ($file ? ' Output started at ' . $file . ':' . $line . '.' : ''),
 			);
 		}
 		if (session_status() !== PHP_SESSION_ACTIVE) {
